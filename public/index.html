@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <title>Est-ce que j'ai raison&nbsp;?</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <main class="wrapper">
+    <div class="card">
+      <h1>Est-ce que j'ai raison&nbsp;?</h1>
+
+      <form id="question-form">
+        <label class="option">
+          <input type="radio" name="answer" value="oui" checked />
+          <div class="option-content">
+            <span class="label">Oui</span>
+            <span class="sub">version payante</span>
+          </div>
+        </label>
+
+        <label class="option">
+          <input type="radio" name="answer" value="non" />
+          <div class="option-content">
+            <span class="label">Non</span>
+            <span class="sub">version freemium</span>
+          </div>
+        </label>
+
+        <button type="submit" class="submit">Valider</button>
+      </form>
+
+      <div id="result" class="result"></div>
+    </div>
+  </main>
+
+  <script>
+    const form = document.getElementById('question-form');
+    const result = document.getElementById('result');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const data = new FormData(form);
+      const answer = data.get('answer');
+
+      if (answer === 'non') {
+        result.textContent = 'Tu as tort. Les pauvres ont toujours tort.';
+        result.className = 'result result--loss';
+        return;
+      }
+
+      try {
+        const res = await fetch('/truth');
+        if (res.status === 402) {
+          // When a 402 response is returned, a compatible x402 client will
+          // need to handle payment. Browsers without an x402 client will
+          // simply see a 402 status code.
+          result.textContent =
+            'Paiement requis. Utilise un client/wallet compatible x402.';
+          result.className = 'result result--info';
+          return;
+        }
+
+        if (!res.ok) {
+          throw new Error('Erreur serveur');
+        }
+
+        const json = await res.json();
+        result.textContent = json.message;
+        result.className = 'result result--win';
+      } catch (err) {
+        console.error(err);
+        result.textContent =
+          'Erreur. Même toi, tu ne peux pas toujours avoir raison.';
+        result.className = 'result result--error';
+      }
+    });
+  </script>
+</body>
+</html>
