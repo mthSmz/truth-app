@@ -23,7 +23,7 @@ app.use(
     {
       'GET /truth': {
         price: `$${process.env.X402_PRICE_USD || '0.01'}`,
-        network: process.env.X402_NETWORK || 'base',
+        network: process.env.X402_NETWORK || 'base-sepolia',
       },
     },
     process.env.X402_FACILITATOR_URL
