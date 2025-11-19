@@ -7,9 +7,9 @@
     "dev": "node server.js",
     "start": "NODE_ENV=production node server.js"
   },
-  "dependencies": {
-    "express": "^4.19.0",
-    "dotenv": "^16.4.0",
-    "@x402/node": "^0.1.0"
+"dependencies": {
+  "express": "^4.19.0",
+  "dotenv": "^16.4.0",
+  "x402-express": "^0.1.0"
   }
 }
